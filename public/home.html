@@ -7,13 +7,13 @@
   <title>Sign Up</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
   <div class="container">
     <h2 class="text-center">Sign Up</h2>
-    <form>
+    <form id="signupForm">
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="name" placeholder="Enter your name" required autocomplete="name">
@@ -32,36 +32,8 @@
       </div>
       <button type="submit" class="btn btn-primary">Sign Up</button>
     </form>
-    
   </div>
-  <script>
-    $(document).ready(function(){
-      $("form").on("submit", function(event){
-        event.preventDefault();
-  
-        var formData = {
-          name: $("#name").val(),
-          email: $("#email").val(),
-          phone: $("#phone").val(),
-          password: $("#password").val()
-        };
-  
-        $.ajax({
-          type: "POST",
-          url: "http://localhost:3000/user/signup",
-          data: formData,
-          success: function(response){
-            alert("Successfully signed up");
-          },
-          error: function(response){
-            if(response.status === 400){
-              alert("User already exists, Please Login");
-            }
-          }
-        });
-      });
-    });
-    </script>
+  <script src="/js/home/home.js"></script>
 </body>
 
 </html>
