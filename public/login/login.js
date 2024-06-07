@@ -14,8 +14,8 @@ loginForm.addEventListener('submit', async (e) => {
 
     if (response.status === 200) {
       alert('Successfully logged in');
-      // Redirect to another page after successful login
-      window.location.href = '/'; // change this to your desired location
+      // Redirect to the chat window page after successful login
+      window.location.href = '/chat/chat.html'; // Change to your chat window page
     }
   } catch (error) {
     if (error.response && error.response.status === 401) {
@@ -25,3 +25,4 @@ loginForm.addEventListener('submit', async (e) => {
     }
   }
 });
+
