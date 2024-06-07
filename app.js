@@ -1,19 +1,24 @@
 require('dotenv').config();
-
 const express = require('express');
 const cors = require('cors');
-const signupController = require('./controllers/signupController');
+const cookieParser = require('cookie-parser');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.static('public')); // to serve static files
 
-app.post('/user/signup', signupController);
+app.use('/user', userRoutes);
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
+
+
+
 
 

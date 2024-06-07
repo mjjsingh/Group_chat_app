@@ -11,10 +11,9 @@ const User = sequelize.define('User', {
   password: DataTypes.STRING
 }, {});
 
-// Sync the model with the database
 User.sync()
   .then(() => console.log('User table has been created'))
-  .catch(error => console.log('error occurred', error));
+  .catch(error => console.log('Error occurred', error));
 
 module.exports = User;
 
