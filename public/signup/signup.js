@@ -1,3 +1,4 @@
+// signup.js
 const signupForm = document.getElementById('signupForm');
 
 signupForm.addEventListener('submit', async (e) => {
@@ -9,7 +10,7 @@ signupForm.addEventListener('submit', async (e) => {
   const password = document.getElementById('password').value;
 
   try {
-    const response = await axios.post('/user/signup', {
+    const response = await axios.post('/signup', { // Corrected URL
       name,
       email,
       phone,
@@ -18,7 +19,8 @@ signupForm.addEventListener('submit', async (e) => {
 
     if (response.status === 201) {
       alert('Successfully signed up');
-      window.location.href = '/login/login.html';
+      // Redirect to login page
+      window.location.href = response.data.redirectTo;
     }
   } catch (error) {
     if (error.response && error.response.status === 409) {
@@ -28,3 +30,6 @@ signupForm.addEventListener('submit', async (e) => {
     }
   }
 });
+
+
+

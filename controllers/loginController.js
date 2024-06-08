@@ -1,3 +1,4 @@
+// loginController.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
@@ -22,10 +23,12 @@ module.exports = async (req, res) => {
       expiresIn: '1h',
     });
 
-    res.status(200).json({ message: 'Logged in successfully', token, user: { id: user.id, name: user.name } });
+    // Redirect to chat page after successful login
+    res.status(200).json({ message: 'Logged in successfully', token, user: { id: user.id, name: user.name }, redirectTo: '/chat/chat.html' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
