@@ -14,8 +14,11 @@ loginForm.addEventListener('submit', async (e) => {
 
     if (response.status === 200) {
       alert('Successfully logged in');
+      const { token, user } = response.data;
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
       // Redirect to the chat window page after successful login
-      window.location.href = '/chat/chat.html'; // Change to your chat window page
+      window.location.href = '/chat/chat.html';
     }
   } catch (error) {
     if (error.response && error.response.status === 401) {
@@ -25,4 +28,5 @@ loginForm.addEventListener('submit', async (e) => {
     }
   }
 });
+
 
