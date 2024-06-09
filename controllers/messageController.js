@@ -7,9 +7,9 @@ exports.sendMessage = async (req, res) => {
   try {
     const newMessage = await Message.create({
       sender,
-      recipient,
+      recipient, // include recipient
       message,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
     res.status(201).json({ message: 'Message sent successfully', newMessage });
   } catch (error) {
@@ -23,8 +23,8 @@ exports.fetchMessages = async (req, res) => {
   try {
     const messages = await Message.findAll({
       where: {
-        [Op.or]: [{ sender: userId }, { recipient: userId }]
-      }
+        [Sequelize.Op.or]: [{ sender: userId }, { recipient: userId }],
+      },
     });
     res.status(200).json({ messages });
   } catch (error) {
