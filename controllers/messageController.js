@@ -32,3 +32,14 @@ exports.fetchMessages = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+// Method to fetch all messages
+exports.getAllMessages = async (req, res) => {
+  try {
+    const messages = await Message.findAll();
+    res.status(200).json(messages);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};

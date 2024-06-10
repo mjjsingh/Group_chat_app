@@ -1,4 +1,4 @@
-require('dotenv').config(); // Load environment variables
+require('dotenv').config(); 
 
 const express = require('express');
 const http = require('http');
@@ -7,9 +7,9 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('./models/User'); // Make sure to correct the path if necessary
+const User = require('./models/User'); 
 const Message = require('./models/Message');
-const auth = require('./middleware/auth'); // Middleware for authentication
+const auth = require('./middleware/auth'); 
 
 const app = express();
 app.use(bodyParser.json());
@@ -24,21 +24,40 @@ app.use(express.json());
 const userRoutes = require('./routes/userRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 
-app.use('/users', userRoutes); // User signup and login routes
-app.use('/messages', auth, messageRoutes); // Message routes protected by auth
+app.use('/users', userRoutes); 
+app.use('/messages', auth, messageRoutes); 
 
-let users = []; // Maintain a list of online users
+let users = [];
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   console.log('A user connected');
 
-  // Send current online users and previous messages to the newly connected user
-  socket.emit('loadInitialData', { users, messages: [] });
+  // Check if the user is returning or a new connection
+  const isReturningUser = users.some(user => user.socketId === socket.id);
 
+  if (!isReturningUser) {
+    // If it's a new connection, handle user joining
+    socket.on('newUser', (user) => {
+      users.push({ ...user, socketId: socket.id });
+      io.emit('updateUserList', users);
+      socket.broadcast.emit('userJoined', user);
+    });
+  }
+
+  // Send initial data to the connected user
+  socket.emit('loadInitialData', { users, messages: [] });
+  // Handle new user connections
   socket.on('newUser', (user) => {
-    users.push({ id: socket.id, ...user });
-    io.emit('updateUserList', users);
-    socket.broadcast.emit('userJoined', user); // Emit userJoined event to all other users
+    // Check if the user already exists in the users list
+    const existingUserIndex = users.findIndex(u => u.id === user.id);
+    if (existingUserIndex === -1) {
+      users.push(user);
+      io.emit('updateUserList', users);
+      socket.broadcast.emit('userJoined', user);
+    } else {
+      // If user already exists, update their socket ID
+      users[existingUserIndex].socketId = socket.id;
+    }
   });
 
   socket.on('sendMessage', async (data) => {
@@ -53,8 +72,8 @@ io.on('connection', (socket) => {
 
     try {
       await Message.create({
-        sender: user.id, // Ensure the sender ID is stored
-        recipient: null, // Assuming group chat, recipient is null
+        sender: user.id, 
+        recipient: null, 
         message,
       });
     } catch (error) {
@@ -67,6 +86,7 @@ io.on('connection', (socket) => {
     io.emit('updateUserList', users);
   });
 });
+
 // Signup route handler
 app.post('/signup', async (req, res) => {
   const { name, email, phone, password } = req.body;
@@ -127,6 +147,7 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
 
 
 
